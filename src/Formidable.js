@@ -297,9 +297,10 @@ class IncomingForm extends EventEmitter {
 
     this._flushing += 1;
 
+    const hasRename = typeof this.options.filename === 'function';
     const file = this._newFile({
       path: this._rename(part),
-      filename: part.filename,
+      filename: hasRename ? `${this.options.filename.call(this, part, this)}${this._getExtension(part.filename)}` : part.filename,
       mime: part.mime,
     });
     file.on('error', (err) => {
